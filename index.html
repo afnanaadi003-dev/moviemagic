@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cinema Chronos - The Eternal Flow of Movies</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --bg-subtle: #12121a;
+      --fg: #f0f0f5;
+      --muted: #6b6b80;
+      --accent: #ff6b35;
+      --gold: #d4af37;
+      --rose: #e8b4bc;
+      --emerald: #10b981;
+      --lapis: #3b82f6;
+      --violet: #8b5cf6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      overflow-x: hidden;
+    }
+
+    .playfair {
+      font-family: 'Playfair Display', serif;
+    }
+
+    /* Floating floral elements */
+    .floating-flower {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--rose) 0%, var(--violet) 100%);
+      border-radius: 50%;
+      opacity: 0.9;
+      animation: float 6s ease-in-out infinite;
+      filter: drop-shadow(0 4px 12px rgba(232, 180, 188, 0.3));
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(15deg); }
+    }
+
+    .petal {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border: 20px solid transparent;
+      border-bottom: 20px solid var(--violet);
+      opacity: 0.8;
+    }
+
+    .star-particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: var(--gold);
+      border-radius: 50%;
+      opacity: 0.9;
+      animation: sparkle 4s ease-in-out infinite;
+    }
+
+    @keyframes sparkle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.5); }
+    }
+
+    .canvas-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .glow-orbit {
+      position: absolute;
+      border: 1px solid rgba(255, 107, 53, 0.3);
+      border-radius: 50%;
+      animation: orbit 15s linear infinite;
+    }
+
+    @keyframes orbit {
+      0% { transform: rotate(0deg) translate(100px) rotate(0deg); }
+      100% { transform: rotate(360deg) translate(100px) rotate(-360deg); }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent) 0%, var(--violet) 100%);
+      color: white;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(255, 107, 53, 0.4);
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--fg);
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-weight: 600;
+      border: 2px solid var(--muted);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .section {
+      padding: 80px 0;
+    }
+
+    .nav-link {
+      color: var(--muted);
+      transition: color 0.3s ease;
+      position: relative;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: var(--fg);
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .glass-card {
+      background: rgba(18, 18, 26, 0.7);
+      backdrop-filter: blur(20px);
+      border: 1px rgba(255, 107, 53, 0.1);
+      border-radius: 20px;
+      padding: 32px;
+    }
+
+    .marquee-container {
+      overflow: hidden;
+      white-space: nowrap;
+      background: linear-gradient(90deg, var(--bg), var(--bg-subtle), var(--bg));
+      padding: 20px 0;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marquee 30s linear infinite;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-item {
+      position: relative;
+      padding-left: 32px;
+      margin-bottom: 32px;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: 8px;
+      top: 12px;
+      width: 12px;
+      height: 12px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+
+    .floating-island {
+      position: absolute;
+      bottom: -50px;
+      background: var(--bg-subtle);
+      border-radius: 30px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      animation: lift 5s ease-in-out infinite;
+    }
+
+    @keyframes lift {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-20px); }
+    }
+
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.5;
+    }
+
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--accent);
+      top: -100px;
+      left: -100px;
+      animation: pulse-orbit 20s infinite;
+    }
+
+    .orb-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--violet);
+      bottom: -50px;
+      right: -50px;
+      animation: pulse-orbit 25s infinite reverse;
+    }
+
+    @keyframes pulse-orbit {
+      0%, 100% { opacity: 0.3; }
+      50% { opacity: 0.7; }
+    }
+
+    .type-chip {
+      background: rgba(255, 107, 53, 0.1);
+      color: var(--accent);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid rgba(255, 107, 53, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .type-chip:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .scroll-reveal {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s ease;
+    }
+
+    .scroll-reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+      .floating-flower {
+        display: none;
+      }
+      .nav-link {
+        font-size: 0.875rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background orbs -->
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  
+  <!-- Floating flowers -->
+  <div class="floating-flower" style="top: 10%; left: -20px; animation-delay: 0s;"></div>
+  <div class="floating-flower" style="top: 70%; left: -30px; animation-delay: 1s;"></div>
+  <div class="floating-flower" style="bottom: 10%; right: -20px; animation-delay: 2s;"></div>
+  
+  <!-- Canvas for particles -->
+  <canvas id="particle-canvas"></canvas>
+  
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-[rgba(10,10,15,0.8)] backdrop-blur-xl border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <a href="#" class="text-2xl playfair font-bold tracking-wider" style="color: var(--gold);">
+        CinemaChronos
+      </a>
+      <div class="hidden md:flex items-center gap-8">
+        <a href="#history" class="nav-link text-sm">History</a>
+        <a href="#concepts" class="nav-link text-sm">Concepts</a>
+        <a href="#gallery" class="nav-link text-sm">Gallery</a>
+        <a href="#about" class="nav-link text-sm">About</a>
+      </div>
+      <button class="btn-primary hidden md:block">Explore</button>
+      <button class="btn-secondary md:hidden" id="menu-btn">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="min-h-screen flex items-center justify-center relative px-6 pt-20">
+    <div class="relative max-w-7xl mx-auto text-center px-4">
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold playfair mb-6 reveal" 
+          style="color: var(--fg); animation-delay: 0.2s;">
+        The Eternal Flow of Cinema
+      </h1>
+      <p class="text-xl md:text-2xl max-w-2xl mx-auto mb-12 reveal" 
+          style="color: var(--muted); animation-delay: 0.4s;">
+        A journey through 10,000 years of cinematic magic, from the first flicker of Peiry & Fleiry to the digital dreams of today
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 reveal" 
+          style="animation-delay: 0.6s;">
+        <button class="btn-primary">Begin the Journey</button>
+        <button class="btn-secondary">Explore Concepts</button>
+      </div>
+    </div>
+    
+    <!-- Floating elements -->
+    <div class="absolute top-1/4 left-10 md:left-20 transform -translate-y-1/2 floating-island">
+      <h3 class="text-xl font-semibold mb-4">Peiry & Fleiry</h3>
+      <p class="text-sm text-[var(--muted)]">
+        Couple from 10,000 years ago, the first to share a meal under the cosmic light
+      </p>
+    </div>
+    
+    <div class="absolute bottom-1/4 right-10 md:right-20 transform -translate-y-1/2 floating-island" style="animation-delay: 1s;">
+      <h3 class="text-xl font-semibold mb-4">CinemaChronos</h3>
+      <p class="text-sm text-[var(--muted)]">
+        Where every frame tells a story of humanity
+      </p>
+    </div>
+  </section>
+
+  <!-- Marquee of movie types -->
+  <div class="marquee-container">
+    <div class="marquee-content">
+      <span class="text-[var(--muted)] px-4 text-sm tracking-wider">
+        DHANA | MAGIC REALISM | EXPRESSIONISM | NEO-REALISM | SURREALISM | 
+        DHARA | MAGIC | REALISM | PERIODIC | CONTEMPORARY | CLASSIC | 
+        FUTURISTIC | NEO-FUTURISM | Minimalist | Epic | Intimate
+      </span>
+    </div>
+  </div>
+
+  <!-- History Section -->
+  <section id="history" class="section">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            History of the Moving Image
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            10,000 years ago, Peiry and Fleiry, a couple in the ancient settlement of Casimero, discovered the magic of shared storytelling. As they sat by firelight, casting shadows on cave walls, they realized that images could capture moments forever. This was the first cinema - not of celluloid, but of light and shadow.
+          </p>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            From those first primitive flickers, cinema evolved through magical realism, where the mundane dances with the extraordinary. The god and goddess of early films emerged - not as myths, but as mirrors of humanity's deepest aspirations.
+          </p>
+          <div>
+            <button class="btn-primary mt-4">Read Full History</button>
+          </div>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">Timeline of Cinematic Evolution</h3>
+            <div class="space-y-4">
+              <div class="timeline-item">
+                <span>10,000 BCE</span>
+                <div>
+                  <h4>Cave Shadows</h4>
+                  <p>Peiry & Fleiry's first flickering stories</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span>Late 1800s</span>
+                <div>
+                  <h4>The First Projectors</h4>
+                  <p>Lumière brothers and the birth of cinema</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span>1920s</span>
+                <div>
+                  <h4>Expressionism & Realism</h4>
+                  <p>German cinema meets Italian neorealism</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span>1960s</span>
+                <div>
+                  <h4>Magic Realism Emerges</h4>
+                  <p>Where the real meets the magical</p>
+                </div>
+              </div>
+              <div class="timeline-item">
+                <span>Today</span>
+                <div>
+                  <h4>Digital & Beyond</h4>
+                  <p>Endless possibilities in flowing light</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Concepts Section -->
+  <section id="concepts" class="section bg-[var(--bg-subtle)]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            The Physics of Flow
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            In the ancient language of the region, "dhara" means flow - the continuous, unbroken movement of water, of time, of story. Every movie is a dhara, a flow that carries us from one state of being to another.
+          </p>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            When magic realism entered the cinematic vocabulary in the mid-20th century, it added a new dimension to this flow. Now reality and magic moved together, hand in hand, creating stories that felt both grounded and wondrous. The word "magic" before "realism" changed everything - it opened the door to stories where the extraordinary is simply another part of the real.
+          </p>
+          <div>
+            <span class="type-chip">Dhara Flow</span>
+            <span class="type-chip">Magic Realism</span>
+            <span class="type-chip">Periodic Shifts</span>
+          </div>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">Types of Cinematic Flow</h3>
+            <div class="grid grid-cols-2 gap-3">
+              <div></div>
+              <div></div>
+              <div></div>
+              <div></div>
+            </div>
+            <p class="text-sm mt-4" style="color: var(--muted);">
+              Each type represents a different way stories flow through time and consciousness
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Floral flow visual -->
+      <div class="mt-12 reveal" style="animation-delay: 0.4s;">
+        <div class="relative h-64 w-full rounded-2xl overflow-hidden" style="background: linear-gradient(135deg, #1a1a24 0%, #0f0f1a 100%);">
+          <div class="absolute inset-0">
+            <svg width="100%" height="100%" viewBox="0 0 100 100">
+              <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ff6b35"/>
+                  <stop offset="100%" stop-color="#ae2012"/>
+                </linearGradient>
+              </defs>
+              <path d="M0,50 Q50,0 100,50 L100,100 L0,100 Z" fill="url(#grad1)"/>
+              <circle cx="20" cy="30" r="8" fill="white" opacity="0.8"/>
+              <circle cx="80" cy="70" r="6" fill="white" opacity="0.8"/>
+              <circle cx="50" cy="90" r="10" fill="white" opacity="0.8"/>
+            </svg>
+          </div>
+          <div class="absolute top-1/3 left-1/4 transform -translate-x-1/2 -translate-y-1/2">
+            <svg width="60" height="60" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" stroke-width="2">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 7l10 5 10-5"/>
+              <path d="M7 11v5h10v-5"/>
+              <path d="M12 22l-10-5L2 17v5l10 5v-5"/>
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Goddess of Screen -->
+  <section id="goddess" class="section">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            Goddess of the Screen
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            Shilpa Shetty - not just an actress, but a embodiment of the cinematic goddess who bridges the gap between the screen and the soul. Her performances carry the weight of history and the light of a thousand stories.
+          </p>
+          <div class="space-y-3">
+            <p><strong>Debut:</strong> 1993 - baazigar</p>
+            <p><strong>Notable:</strong> DDLJ, Life in a... Metro, Apna Sapna Money Money</p>
+            <p><strong>Philosophy:</strong> Cinema as a path to self-discovery</p>
+          </div>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">
+              The Divine in Every Frame
+            </h3>
+            <p class="text-base mb-4" style="color: var(--muted);">
+              Every cinema lover knows that moment when the screen becomes a portal. The goddess of screen doesn't just act - she manifests the collective dreams of humanity. From the earliest films projected onto walls to today's digital masterpieces, the divine spark lives in every frame.
+            </p>
+            <div class="grid grid-cols-2 gap-3">
+              <span class="type-chip">Portal</span>
+              <span class="type-chip">Manifestation</span>
+              <span class="type-chip">Dream</span>
+              <span class="type-chip">Light</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Amim Ahsan Section -->
+  <section id="amm" class="section bg-[var(--bg-subtle)]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            Collected from Amim Ahsan's Library
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            Amim Ahsan, documented at amimahsanlibrary.blogspot.com, has dedicated his life to collecting the data of cinema - what movies meant, when they were born, how they were made, and whose stories they tell. His library is a treasure trove of cinematic knowledge, preserving the history that would otherwise be lost to time.
+          </p>
+          <blockquote class="italic lg:italic text-lg mb-6" style="color: var(--muted);">
+            "Movies are not just entertainment. They are the collective memory of mankind."
+          </blockquote>
+          <div>
+            <button class="btn-primary">Explore the Blog</button>
+            <button class="btn-secondary">Search Collections</button>
+          </div>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">
+              What, When, How, Whose
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="p-4 rounded-lg" style="background: rgba(255, 107, 53, 0.1);">
+                <h4>WHAT</h4>
+                <p>The essence of cinema</p>
+              </div>
+              <div class="p-4 rounded-lg" style="background: rgba(255, 107, 53, 0.1);">
+                <h4>WHEN</h4>
+                <p>From 10,000 BCE to now</p>
+              </div>
+              <div class="p-4 rounded-lg" style="background: rgba(255, 107, 53, 0.1);">
+                <h4>HOW</h4>
+                <p>Magic, realism, technique, vision</p>
+              </div>
+              <div class="p-4 rounded-lg" style="background: rgba(255, 107, 53, 0.1);">
+                <h4>WHOSE</h4>
+                <p>Peiry & Fleiry, gods, goddesses, all of us</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Business & Industry -->
+  <section id="business" class="section">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-3 gap-8 items-center">
+        <div class="reveal text-center">
+          <div class="text-6xl md:text-8xl playfair" style="color: var(--gold);">🌍</div>
+          <h3 class="text-3xl md:text-4xl mb-2 playfair">Global Industry</h3>
+          <p class="text-[var(--muted)]">Cinema spans every continent, every language, every culture</p>
+        </div>
+        <div class="reveal text-center" style="animation-delay: 0.2s;">
+          <div class="text-6xl md:text-8xl playfair" style="color: var(--gold);">🎬</div>
+          <h3 class="text-3xl md:text-4xl mb-2 playfair">The Business of Dreams</h3>
+          <p class="text-[var(--muted)]">An industry that moves billions while touching hearts</p>
+        </div>
+        <div class="reveal text-center" style="animation-delay: 0.4s;">
+          <div class="text-6xl md:text-8xl playfair" style="color: var(--gold);">👥</div>
+          <h3 class="text-3xl md:text-4xl mb-2 playfair">For Mankind</h3>
+          <p class="text-[var(--muted)]">Cinema makes us human, makes us feel, makes us understand</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Peiry & Feiry - The Accurate Owners -->
+  <section id="owners" class="section bg-[var(--bg-subtle)]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            The Accurate Owners: Peiry & Feiry
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            They are the original owners of the cinematic story. Not of profit, but of the very concept - the couple from 10,000 years ago who first realized that sharing a moment through image could change everything. They created the first haven of shared storytelling.
+          </p>
+          <div class="space-y-3">
+            <p><strong>Origin:</strong> Casimero, 10,000 years ago</p>
+            <p><strong>Concept:</shared storytelling through light and shadow</p>
+            <p><strong>Legacy:</strong> Every film ever made owes a debt to their first flicker</p>
+          </div>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">
+              Working Through History, Science & Study
+            </h3>
+            <p class="text-base mb-4" style="color: var(--muted);">
+              Today, Peiry & Feiry work through the channels of science, study, and creation. They ask questions: What makes a story human? How does cinema affect society? What necessity does being human hold for mankind? Their work is not just about making movies - it's about making the world happy through the actualization of human feeling.
+            </p>
+            <div class="grid grid-cols-3 gap-3">
+              <span class="type-chip">Science</span>
+              <span class="type-chip">Study</span>
+              <span class="type-chip">Creation</span>
+            </div>
+            <div class="mt-4 pt-4 border-t" style="border-color: rgba(255, 107, 53, 0.2);">
+              <p class="text-sm" style="color: var(--muted);">Their mission: <strong>to make every viewer an actual human</strong>, connected and alive</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Effect of Society -->
+  <section id="society" class="section">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            The Effect on Society
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            Cinema is not separate from society - it is society's mirror, its teacher, its catalyst. Every film we watch changes us slightly, adds to our collective understanding. The necessity of being human is explored, questioned, and celebrated through every story told on screen.
+          </p>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            Why do we need movies? Because they are the necessary fiction through which we understand truth. They teach us to feel, to empathize, to connect. In a world that often divides us, cinema is the universal language that reminds us we are all part of the same human dhara.
+          </p>
+          <blockquote class="italic text-lg mb-6" style="color: var(--muted);">
+            "A movie is a question that the world asks of itself."
+          </blockquote>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">
+              Necessity of Being & for Mankind
+            </h3>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <h4>Being Human</h4>
+                <p>Cinema explores what it means to be human</p>
+              </div>
+              <div>
+                <h4>For Mankind</h4>
+                <p>Movies connect us across time and space</p>
+              </div>
+            </div>
+            <p class="mt-4 text-sm" style="color: var(--muted);">
+              The most necessary thing cinema gives us is the experience of truly seeing another human being, even if only for two hours.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery / Movie Types -->
+  <section id="gallery" class="section bg-[var(--bg-subtle)]">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl playfair mb-4" style="color: var(--gold);">
+          Types of Cinematic Flow
+        </h2>
+        <p class="text-[var(--muted)]">All types, from dhara to magic realism, continuing the periodic journey</p>
+      </div>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Dhara</h4>
+          <p>The eternal flow</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Magic Realism</h4>
+          <p>Real + Magic</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Periodic Shifts</h4>
+          <p>Changes through time</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Mystical Flow</h4>
+          <p>Beyond the ordinary</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Expressionism</h4>
+          <p>Inner truth outside</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Neo-Reism</h4>
+          <p>New realism</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Surreal Visions</h4>
+          <p>Dreams awake</p>
+        </div>
+        <div class="p-6 rounded-xl" style="background: rgba(255, 107, 53, 0.1);">
+          <h4>Contemporary</h4>
+          <p>Today's flow</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Haven Flowerly Flying -->
+  <section id="haven" class="section">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="reveal">
+          <h2 class="text-4xl md:text-5xl playfair mb-6" style="color: var(--gold);">
+            Haven: Flowerly Flying
+          </h2>
+          <p class="text-lg mb-6" style="color: var(--muted);">
+            A haven where every story takes flight like a flower in the wind - delicate, beautiful, carried by the currents of time. Peiry & Fleiry's first haven was a place of shared light, and every cinema since has been a flowerly flying vessel, carrying us from one state of consciousness to another.
+          </p>
+          <div class="space-y-3">
+            <p><strong>Floral:</strong> Each story blooms uniquely</p>
+            <p><strong>Flying:</strong> Cinemas carry us upward</p>
+            <p><strong>Haven:</strong> A place of safety and beauty</p>
+          </div>
+        </div>
+        
+        <div class="reveal" style="animation-delay: 0.2s;">
+          <div class="glass-card p-6">
+            <h3 class="text-2xl font-bold mb-4" style="color: var(--accent);">
+              The Cinematic Cosmos
+            </h3>
+            <p class="text-base mb-4" style="color: var(--muted);">
+              Imagine a universe where every movie is a flower, blooming in the vast expanse of cinematic history. Some are tiny wildflowers of independent cinema, others are great blooms of blockbuster epics. And all of them fly - carrying us, lifting us, taking us to places we've never been.
+            </p>
+            <div class="space-y-2">
+              <span class="type-chip">Bloom</span>
+              <span class="type-chip">Flight</span>
+              <span class="type-chip">Cosmos</span>
+              <span class="type-chip">Garden</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Interactive flower animation -->
+      <div class="mt-12 relative h-96 w-full">
+        <div id="flower-garden" class="absolute inset-0 overflow-hidden"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="border-t bg-[var(--bg-subtle)] pt-12">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid lg:grid-cols-4 gap-8 mb-8">
+        <div class="lg:col-span-2">
+          <a href="#" class="text-2xl playfair font-bold tracking-wider" style="color: var(--gold);">
+            CinemaChronos
+          </a>
+          <p class="text-[var(--muted)] mt-4">
+            Exploring 10,000 years of cinematic flow, from Peiry & Fleiry to the present day
+          </p>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Navigate</h4>
+          <ul class="space-y-2">
+            <li><a href="#history" class="text-[var(--muted)] hover:text-[var(--fg)] transition">History</a></li>
+            <li><a href="#concepts" class="text-[var(--muted)] hover:text-[var(--fg)] transition">Concepts</a></li>
+            <li><a href="#gallery" class="text-[var(--muted)] hover:text-[var(--fg)] transition">Gallery</a></li>
+            <li><a href="#about" class="text-[var(--muted)] hover:text-[var(--fg)] transition">About</a></li>
+          </ul>
+        </div>
+        <div>
+          <h4 class="font-semibold mb-4">Connect</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-[var(--muted)] hover:text-[var(--fg)] transition">Blog</a></li>
+            <li><a href="#" class="text-[var(--muted)] hover:text-[var(--fg)] transition">Library</a></li>
+            <li><a href="#" class="text-[var(--muted)] hover:text-[var(--fg)] transition">Contact</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="pt-6 border-t" style="border-color: rgba(255, 107, 53, 0.1);">
+        <p class="text-center text-[var(--muted)] text-sm">
+          © 2026 CinemaChronos. Inspired by the eternal flow of Peiry & Fleiry. 
+          All the movies you watch are borrowed from the garden of time.
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Particle canvas
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    // Create particles
+    const particleCount = Math.min(80, Math.floor(window.innerWidth / 30));
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.5,
+        vy: (Math.random() - 0.5) * 0.5,
+        radius: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.5 + 0.3,
+        color: Math.random() > 0.5 ? '#ff6b35' : '#3b82f6'
+      });
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Wrap around
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${getColorCode(p.color)}, ${p.opacity})`;
+        ctx.fill();
+      });
+
+      animationId = requestAnimationFrame(drawParticles);
+    }
+
+    function getColorCode(color) {
+      if (color === '#ff6b35') return '255, 107, 53';
+      if (color === '#3b82f6') return '59, 130, 246';
+      return '255, 255, 255';
+    }
+
+    // Flower garden
+    const garden = document.getElementById('flower-garden');
+    function createFlowers() {
+      const count = Math.min(20, Math.floor(window.innerWidth / 50));
+      for (let i = 0; i < count; i++) {
+        const flower = document.createElement('div');
+        flower.className = 'floating-flower';
+        flower.style.left = `${Math.random() * 100}%`;
+        flower.style.top = `${Math.random() * 100}%`;
+        flower.style.animationDelay = `${Math.random() * 5}s`;
+        flower.style.width = `${30 + Math.random() * 40}px`;
+        flower.style.height = `${30 + Math.random() * 40}px`;
+        garden.appendChild(flower);
+      }
+    }
+    createFlowers();
+
+    // Scroll reveal
+    const revealElements = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => {
+            entry.target.classList.add('active');
+          }, index * 100);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    revealElements.forEach(el => observer.observe(el));
+
+    // Marquee
+    const marquee = document.querySelector('.marquee-content');
+    if (marquee) {
+      marquee.style.animationDuration = `${marquee.scrollWidth / 50}s`;
+    }
+
+    // Initialize particles after DOM is ready
+    setTimeout(() => {
+      drawParticles();
+    }, 100);
+
+    // Menu toggle
+    const menuBtn = document.getElementById('menu-btn');
+    const navLinks = document.querySelector('.nav-links');
+    if (menuBtn) {
+      menuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+      });
+    }
+  </script>
+</body>
+</html>
